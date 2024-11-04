@@ -1,4 +1,4 @@
-var MarkersCanvasModule = (function (exports, L, RBush) {
+var MarkerCanvasModule = (function (exports, L, RBush) {
   'use strict';
 
   function _interopNamespaceDefault(e) {
@@ -20,7 +20,7 @@ var MarkersCanvasModule = (function (exports, L, RBush) {
 
   var L__namespace = /*#__PURE__*/_interopNamespaceDefault(L);
 
-  var MarkersCanvas = L__namespace.Layer.extend({
+  var MarkerCanvasLayer = L__namespace.Layer.extend({
       // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       //
       // private: properties
@@ -368,7 +368,7 @@ var MarkersCanvasModule = (function (exports, L, RBush) {
       },
   });
 
-  exports.MarkersCanvas = MarkersCanvas;
+  exports.MarkerCanvasLayer = MarkerCanvasLayer;
 
   return exports;
 

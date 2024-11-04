@@ -17,7 +17,17 @@ type PositionBox = {
   marker: L.Marker;
 };
 
-export const MarkersCanvas = L.Layer.extend({
+export interface MarkerCanvasLayerType extends L.Layer {
+  getBounds(): L.LatLngBounds;
+  redraw(): void;
+  clear(): void;
+  addMarker(marker: L.Marker): void;
+  addMarkers(markers: L.Marker[]): void;
+  removeMarker(marker: L.Marker): void;
+  removeMarkers(markers: L.Marker[]): void;
+}
+
+export const MarkerCanvasLayer = L.Layer.extend({
   // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   //
   // private: properties
@@ -457,4 +467,6 @@ export const MarkersCanvas = L.Layer.extend({
 
     L.DomUtil.setTransform(this._canvas, offset, scale);
   },
-});
+}) as unknown as {
+  new (): MarkerCanvasLayerType;
+};

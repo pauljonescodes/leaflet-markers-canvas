@@ -2,7 +2,7 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./public/build",
+    "outDir": "./build",
     // begin custom
     "target": "ES5",
     "module": "ESNext",
