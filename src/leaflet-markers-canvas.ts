@@ -1,6 +1,22 @@
 import L from "leaflet";
 import RBush from "rbush";
 
+type MarkerBox = {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+  marker: L.Marker;
+};
+
+type PositionBox = {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+  marker: L.Marker;
+};
+
 const markersCanvas = {
   // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   //
@@ -37,7 +53,7 @@ const markersCanvas = {
   },
 
   getBounds() {
-    const bounds = new L.LatLngBounds();
+    const bounds = new L.LatLngBounds([0, 0], [0, 0]);
 
     this._markers.forEach((marker) => {
       bounds.extend(marker.getLatLng());
@@ -77,8 +93,8 @@ const markersCanvas = {
 
   // add multiple markers (better for rBush performance)
   addMarkers(markers) {
-    const markerBoxes = [];
-    const positionBoxes = [];
+    const markerBoxes: MarkerBox[] = [];
+    const positionBoxes: PositionBox[] = [];
 
     markers.forEach((marker) => {
       const { markerBox, positionBox, isVisible } = this._addMarker(marker);
@@ -100,7 +116,7 @@ const markersCanvas = {
     const latLng = marker.getLatLng();
     const isVisible = this._map.getBounds().contains(latLng);
 
-    const positionBox = {
+    const positionBox: PositionBox = {
       minX: latLng.lng,
       minY: latLng.lat,
       maxX: latLng.lng,
@@ -224,7 +240,11 @@ const markersCanvas = {
   //
   // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-  _addMarker(marker) {
+  _addMarker(marker): {
+    markerBox: MarkerBox | null;
+    positionBox: PositionBox | null;
+    isVisible: boolean | null;
+  } {
     if (marker.options.pane !== "markerPane" || !marker.options.icon) {
       console.error("This is not a marker", marker);
 
@@ -333,13 +353,13 @@ const markersCanvas = {
     };
 
     // draw only visible markers
-    const markers = [];
+    const markers: MarkerBox[] = [];
     this._positionsTree.search(mapBoundsBox).forEach(({ marker }) => {
       const latLng = marker.getLatLng();
       const { x, y } = this._map.latLngToContainerPoint(latLng);
       const { iconSize, iconAnchor } = marker.options.icon.options;
 
-      const markerBox = {
+      const markerBox: MarkerBox = {
         minX: x - iconAnchor[0],
         minY: y - iconAnchor[1],
         maxX: x + iconSize[0] - iconAnchor[0],
@@ -431,4 +451,4 @@ const markersCanvas = {
   },
 };
 
-L.MarkersCanvas = L.Layer.extend(markersCanvas);
+(L as any).MarkersCanvas = L.Layer.extend(markersCanvas);
