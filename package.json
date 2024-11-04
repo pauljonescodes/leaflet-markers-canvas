@@ -3,6 +3,7 @@
   "version": "0.2.2",
   "description": "A Leaflet plugin to render many markers in a canvas instead of the DOM",
   "main": "public/dist/bundle.js",
+  "module": "dist/index.js",
   "scripts": {
     "test": "exit 0",
     "build": "rollup --config rollup.config.mjs",

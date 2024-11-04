@@ -12,6 +12,11 @@ export default {
         rbush: 'RBush',
       },
     },
+    {
+      file: 'dist/index.js',
+      format: 'esm',
+      sourcemap: true,
+    }
   ],
   external: ['leaflet', 'rbush'],
   plugins: [
