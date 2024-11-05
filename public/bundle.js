@@ -21,27 +21,13 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
   var L__namespace = /*#__PURE__*/_interopNamespaceDefault(L);
 
   var MarkerCanvasLayer = L__namespace.Layer.extend({
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // private: properties
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       _map: null,
       _canvas: null,
       _context: null,
-      // leaflet markers (used to getBounds)
       _markers: new Array(),
-      // visible markers
       _markersTree: new RBush(),
-      // every marker positions (even out of the canvas)
       _positionsTree: new RBush(),
-      // icon images index
       _icons: {},
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // public: global
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       addTo: function (map) {
           map.addLayer(this);
           return this;
@@ -62,11 +48,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           this._markers = [];
           this._redraw(true);
       },
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // public: markers
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       addMarker: function (marker) {
           var _a = this._addMarker(marker), markerBox = _a.markerBox, positionBox = _a.positionBox, isVisible = _a.isVisible;
           if (markerBox && isVisible) {
@@ -76,7 +57,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
               this._positionsTree.insert(positionBox);
           }
       },
-      // add multiple markers (better for rBush performance)
       addMarkers: function (markers) {
           var _this = this;
           var markerBoxes = [];
@@ -110,7 +90,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
               this._redraw(true);
           }
       },
-      // remove multiple markers (better for rBush performance)
       removeMarkers: function (markers) {
           var _this = this;
           var hasChanged = false;
@@ -135,15 +114,9 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
               this._redraw(true);
           }
       },
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // leaflet: default methods
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       initialize: function (options) {
           L__namespace.Util.setOptions(this, options);
       },
-      // called by Leaflet on `map.addLayer`
       onAdd: function (map) {
           this._map = map;
           this._initCanvas();
@@ -156,7 +129,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           //   map.on('zoomanim', this._animateZoom, this);
           // }
       },
-      // called by Leaflet
       onRemove: function (map) {
           this.getPane().removeChild(this._canvas);
           map.off('click', this._fire, this);
@@ -171,11 +143,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           L__namespace.Util.setOptions(this, options);
           return this.redraw();
       },
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // private: global methods
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       _initCanvas: function () {
           var _a = this._map.getSize(), x = _a.x, y = _a.y;
           var isAnimated = this._map.options.zoomAnimation && L__namespace.Browser.any3d;
@@ -185,11 +152,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           this._context = this._canvas.getContext('2d');
           L__namespace.DomUtil.addClass(this._canvas, "leaflet-zoom-".concat(isAnimated ? 'animated' : 'hide'));
       },
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // private: marker methods
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       _addMarker: function (marker) {
           if (marker.options.pane !== 'markerPane' || !marker.options.icon) {
               console.error('This is not a marker', marker);
@@ -306,11 +268,6 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           this._markersTree.clear();
           this._markersTree.load(markers);
       },
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-      //
-      // private: event methods
-      //
-      // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
       _reset: function () {
           var topLeft = this._map.containerPointToLayerPoint([0, 0]);
           L__namespace.DomUtil.setPosition(this._canvas, topLeft);

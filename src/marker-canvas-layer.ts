@@ -28,33 +28,13 @@ export interface MarkerCanvasLayerType extends L.Layer {
 }
 
 export const MarkerCanvasLayer = L.Layer.extend({
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // private: properties
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
   _map: null,
   _canvas: null,
   _context: null,
-
-  // leaflet markers (used to getBounds)
   _markers: new Array<L.Marker>(),
-
-  // visible markers
   _markersTree: new RBush<MarkerBox>(),
-
-  // every marker positions (even out of the canvas)
   _positionsTree: new RBush<PositionBox>(),
-
-  // icon images index
   _icons: {},
-
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // public: global
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
   addTo(map: L.Map) {
     map.addLayer(this);
@@ -83,12 +63,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     this._redraw(true);
   },
 
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // public: markers
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
   addMarker(marker: L.Marker) {
     const {markerBox, positionBox, isVisible} = this._addMarker(marker);
 
@@ -101,7 +75,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     }
   },
 
-  // add multiple markers (better for rBush performance)
   addMarkers(markers: L.Marker[]) {
     const markerBoxes: MarkerBox[] = [];
     const positionBoxes: PositionBox[] = [];
@@ -143,7 +116,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     }
   },
 
-  // remove multiple markers (better for rBush performance)
   removeMarkers(markers: L.Marker[]) {
     let hasChanged = false;
 
@@ -178,17 +150,10 @@ export const MarkerCanvasLayer = L.Layer.extend({
     }
   },
 
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // leaflet: default methods
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
   initialize(options: any) {
     L.Util.setOptions(this, options);
   },
 
-  // called by Leaflet on `map.addLayer`
   onAdd(map: L.Map) {
     this._map = map;
     this._initCanvas();
@@ -205,7 +170,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     // }
   },
 
-  // called by Leaflet
   onRemove(map: L.Map) {
     this.getPane().removeChild(this._canvas);
 
@@ -225,12 +189,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     return this.redraw();
   },
 
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // private: global methods
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
   _initCanvas() {
     const {x, y} = this._map.getSize();
     const isAnimated = this._map.options.zoomAnimation && L.Browser.any3d;
@@ -248,12 +206,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
       `leaflet-zoom-${isAnimated ? 'animated' : 'hide'}`,
     );
   },
-
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // private: marker methods
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
   _addMarker(marker: L.Marker): {
     markerBox: MarkerBox | null;
@@ -392,12 +344,6 @@ export const MarkerCanvasLayer = L.Layer.extend({
     this._markersTree.clear();
     this._markersTree.load(markers);
   },
-
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  //
-  // private: event methods
-  //
-  // * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
   _reset() {
     const topLeft = this._map.containerPointToLayerPoint([0, 0]);

@@ -1,37 +1,14 @@
 {
-  "name": "marker-canvas-layer",
-  "version": "0.2.2",
-  "description": "A Leaflet plugin to render many markers in a canvas instead of the DOM",
-  "main": "public/dist/bundle.js",
-  "module": "dist/index.js",
-  "scripts": {
-    "test": "exit 0",
-    "build": "rollup --config rollup.config.mjs",
-    "lint": "gts lint",
-    "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint",
-    "serve": "http-server"
-  },
-  "keywords": [
-    "leaflet",
-    "canvas",
-    "markers"
-  ],
   "authors": [
-    "François Romain <francoisromain@gmail.com>"
+    "François Romain <francoisromain@gmail.com>",
+    "Paul Jones <paul@burro.ai>"
   ],
-  "license": "AGPL-3.0-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/francoisromain/leaflet-markers-canvas.git"
+  "dependencies": {
+    "@types/leaflet": "^1.9.14",
+    "@types/node": "^22.7.5",
+    "@types/rbush": "^4.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/francoisromain/leaflet-markers-canvas/issues"
-  },
+  "description": "A Leaflet plugin to render many markers in a canvas instead of the DOM",
   "devDependencies": {
     "@rollup/plugin-buble": "^1.0.3",
     "eslint": "^9.14.0",
@@ -41,13 +18,37 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.6.3"
   },
+  "files": [
+    "build"
+  ],
+  "keywords": [
+    "leaflet",
+    "canvas",
+    "markers"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "name": "marker-canvas-layer",
   "peerDependencies": {
     "leaflet": "^1.7.1",
     "rbush": "^3.0.1"
   },
-  "dependencies": {
-    "@types/leaflet": "^1.9.14",
-    "@types/node": "^22.7.5",
-    "@types/rbush": "^4.0.0"
-  }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pauljonescodes/marker-canvas-layer.git"
+  },
+  "scripts": {
+    "build": "rollup --config rollup.config.mjs",
+    "clean": "gts clean",
+    "compile": "tsc --build --verbose --force",
+    "fix": "gts fix",
+    "lint": "gts lint",
+    "posttest": "npm run lint",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "serve": "http-server",
+    "test": "exit 0"
+  },
+  "version": "0.0.3"
 }
