@@ -29,8 +29,8 @@ export interface MarkerCanvasLayerType extends L.Layer {
 
 export const MarkerCanvasLayer = L.Layer.extend({
   _map: null,
-  _canvas: null,
-  _context: null,
+  _canvas: null as HTMLCanvasElement | null,
+  _context: null as CanvasRenderingContext2D | null,
   _markers: new Array<L.Marker>(),
   _markersTree: new RBush<MarkerBox>(),
   _positionsTree: new RBush<PositionBox>(),
@@ -199,7 +199,7 @@ export const MarkerCanvasLayer = L.Layer.extend({
     );
     this._canvas.width = x;
     this._canvas.height = y;
-    this._context = this._canvas.getContext('2d');
+    this._context = (this._canvas as HTMLCanvasElement).getContext('2d');
 
     L.DomUtil.addClass(
       this._canvas,
@@ -212,16 +212,13 @@ export const MarkerCanvasLayer = L.Layer.extend({
     positionBox: PositionBox | null;
     isVisible: boolean | null;
   } {
-    if (marker.options.pane !== 'markerPane' || !marker.options.icon) {
+    if (!marker.options.icon) {
       console.error('This is not a marker', marker);
-
       return {markerBox: null, positionBox: null, isVisible: null};
     }
 
-    // required for pop-up and tooltip
     (marker as any)._map = this._map;
 
-    // add _leaflet_id property
     L.Util.stamp(marker);
 
     const latLng = marker.getLatLng();
@@ -292,17 +289,17 @@ export const MarkerCanvasLayer = L.Layer.extend({
       ?.options as any;
     const angle = rotationAngle || 0;
 
-    this._context.save();
-    this._context.translate(x, y);
-    this._context.rotate((angle * Math.PI) / 180);
-    this._context.drawImage(
+    (this._context as CanvasRenderingContext2D).save();
+    (this._context as CanvasRenderingContext2D).translate(x, y);
+    (this._context as CanvasRenderingContext2D).rotate((angle * Math.PI) / 180);
+    (this._context as CanvasRenderingContext2D).drawImage(
       (marker as any).image,
       -iconAnchor[0],
       -iconAnchor[1],
       iconSize[0],
       iconSize[1],
     );
-    this._context.restore();
+    (this._context as CanvasRenderingContext2D).restore();
   },
 
   _redraw(clear: boolean) {

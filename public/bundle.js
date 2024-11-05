@@ -153,13 +153,11 @@ var MarkerCanvasModule = (function (exports, L, RBush) {
           L__namespace.DomUtil.addClass(this._canvas, "leaflet-zoom-".concat(isAnimated ? 'animated' : 'hide'));
       },
       _addMarker: function (marker) {
-          if (marker.options.pane !== 'markerPane' || !marker.options.icon) {
+          if (!marker.options.icon) {
               console.error('This is not a marker', marker);
               return { markerBox: null, positionBox: null, isVisible: null };
           }
-          // required for pop-up and tooltip
           marker._map = this._map;
-          // add _leaflet_id property
           L__namespace.Util.stamp(marker);
           var latLng = marker.getLatLng();
           var isVisible = this._map.getBounds().contains(latLng);

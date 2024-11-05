@@ -1,7 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 
 export default {
-  input: 'src/marker-canvas-layer.ts',
+  input: 'src/index.ts',
   output: [
     {
       file: 'public/bundle.js',
